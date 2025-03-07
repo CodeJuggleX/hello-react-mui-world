@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Table, 
   TableBody, 
@@ -13,6 +14,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskStatusChip from './TaskStatusChip';
 import { Task } from '../types/types';
 
@@ -23,6 +25,12 @@ interface TaskTableProps {
 }
 
 const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
+  const navigate = useNavigate();
+
+  const handleViewDetails = (taskId: string) => {
+    navigate(`/task/${taskId}`);
+  };
+
   return (
     <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
       <Table sx={{ minWidth: 650 }}>
@@ -43,8 +51,10 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
               key={task.id}
               sx={{ 
                 '&:last-child td, &:last-child th': { border: 0 },
-                '&:hover': { backgroundColor: '#f9f9f9' }
+                '&:hover': { backgroundColor: '#f9f9f9' },
+                cursor: 'pointer'
               }}
+              onClick={() => handleViewDetails(task.id)}
             >
               <TableCell>
                 <Typography variant="body2" fontWeight={500}>
@@ -81,14 +91,30 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                 <IconButton 
                   size="small" 
                   color="primary" 
-                  onClick={() => onEdit(task)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleViewDetails(task.id);
+                  }}
+                >
+                  <VisibilityIcon fontSize="small" />
+                </IconButton>
+                <IconButton 
+                  size="small" 
+                  color="primary" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(task);
+                  }}
                 >
                   <EditIcon fontSize="small" />
                 </IconButton>
                 <IconButton 
                   size="small" 
                   color="error" 
-                  onClick={() => onDelete(task.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(task.id);
+                  }}
                 >
                   <DeleteIcon fontSize="small" />
                 </IconButton>
