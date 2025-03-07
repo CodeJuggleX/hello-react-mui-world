@@ -7,20 +7,45 @@ import {
   Grid,
   Snackbar,
   Alert,
+  CircularProgress
 } from '@mui/material';
 import SearchBar from '../components/SearchBar';
 import TaskFilters from '../components/TaskFilters';
 import TaskTable from '../components/TaskTable';
-import { tasks as mockTasks } from '../data/mockTasks';
+import { fetchTasks } from '../services/apiService';
 import { Task, StatusFilter, SortOption } from '../types/types';
 
 const TaskManager: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>(mockTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('Все статусы');
   const [sortOption, setSortOption] = useState<SortOption>('По сроку');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Загрузка задач с API
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchTasks();
+        setTasks(data);
+        setLoading(false);
+      } catch (error) {
+        setError('Ошибка при загрузке задач');
+        setLoading(false);
+        setSnackbar({
+          open: true,
+          message: 'Ошибка при загрузке задач',
+          severity: 'error'
+        });
+      }
+    };
+
+    loadTasks();
+  }, []);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
@@ -35,15 +60,16 @@ const TaskManager: React.FC = () => {
   };
 
   const handleEditTask = (task: Task) => {
-    // In a real app, this would open a modal to edit the task
+    // В реальном приложении здесь был бы API запрос
     setSnackbar({
       open: true,
-      message: `Редактирование задачи: ${task.title}`,
+      message: `Редактирование задачи: ${task.task_name}`,
       severity: 'success'
     });
   };
 
   const handleDeleteTask = (taskId: string) => {
+    // В реальном приложении здесь был бы API запрос
     const updatedTasks = tasks.filter(task => task.id !== taskId);
     setTasks(updatedTasks);
     setSnackbar({
@@ -57,35 +83,34 @@ const TaskManager: React.FC = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  // Filter and sort tasks when dependencies change
+  // Фильтрация и сортировка задач при изменении зависимостей
   useEffect(() => {
     let result = [...tasks];
     
-    // Apply search filter
+    // Применение поискового фильтра
     if (searchQuery) {
       result = result.filter(task => 
-        task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.task_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         task.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
     
-    // Apply status filter
+    // Применение фильтра по статусу
     if (statusFilter !== 'Все статусы') {
-      result = result.filter(task => task.status === statusFilter);
+      result = result.filter(task => task.task_status === statusFilter);
     }
     
-    // Apply sorting
+    // Применение сортировки
     result.sort((a, b) => {
       switch (sortOption) {
         case 'По сроку':
-          return new Date(a.dueDate.split('.').reverse().join('-')).getTime() - 
-                 new Date(b.dueDate.split('.').reverse().join('-')).getTime();
+          return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
         case 'По приоритету': {
           const priorityOrder = { 'Высокий': 0, 'Средний': 1, 'Низкий': 2 };
-          return priorityOrder[a.priority] - priorityOrder[b.priority];
+          return priorityOrder[a.task_priority] - priorityOrder[b.task_priority];
         }
         case 'По названию':
-          return a.title.localeCompare(b.title);
+          return a.task_name.localeCompare(b.task_name);
         default:
           return 0;
       }
@@ -119,11 +144,19 @@ const TaskManager: React.FC = () => {
         </Grid>
       </Grid>
       
-      <TaskTable 
-        tasks={filteredTasks} 
-        onEdit={handleEditTask} 
-        onDelete={handleDeleteTask} 
-      />
+      {loading ? (
+        <Box display="flex" justifyContent="center" py={5}>
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>
+      ) : (
+        <TaskTable 
+          tasks={filteredTasks} 
+          onEdit={handleEditTask} 
+          onDelete={handleDeleteTask} 
+        />
+      )}
       
       <Snackbar 
         open={snackbar.open} 

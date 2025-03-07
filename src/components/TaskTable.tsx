@@ -10,7 +10,9 @@ import {
   TableRow, 
   Paper, 
   IconButton,
-  Typography
+  Typography,
+  Avatar,
+  Box
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -29,6 +31,12 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
 
   const handleViewDetails = (taskId: string) => {
     navigate(`/task/${taskId}`);
+  };
+
+  // Функция для форматирования даты из ISO в дд.мм.гггг
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
   };
 
   return (
@@ -54,11 +62,11 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                 '&:hover': { backgroundColor: '#f9f9f9' },
                 cursor: 'pointer'
               }}
-              onClick={() => handleViewDetails(task.id)}
+              onClick={() => task.id && handleViewDetails(task.id)}
             >
               <TableCell>
                 <Typography variant="body2" fontWeight={500}>
-                  {task.title}
+                  {task.task_name}
                 </Typography>
               </TableCell>
               <TableCell>
@@ -76,16 +84,25 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                 </Typography>
               </TableCell>
               <TableCell>
-                <TaskStatusChip status={task.status} />
+                <TaskStatusChip status={task.task_status} />
               </TableCell>
               <TableCell>
-                <Typography variant="body2">{task.priority}</Typography>
+                <Typography variant="body2">{task.task_priority}</Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="body2">{task.assignee}</Typography>
+                <Box display="flex" alignItems="center">
+                  <Avatar 
+                    src={task.employee_info.image} 
+                    alt={task.employee_info.full_name}
+                    sx={{ width: 30, height: 30, mr: 1 }}
+                  />
+                  <Typography variant="body2">
+                    {task.employee_info.full_name}
+                  </Typography>
+                </Box>
               </TableCell>
               <TableCell>
-                <Typography variant="body2">{task.dueDate}</Typography>
+                <Typography variant="body2">{formatDate(task.deadline)}</Typography>
               </TableCell>
               <TableCell align="center">
                 <IconButton 
@@ -93,7 +110,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                   color="primary" 
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleViewDetails(task.id);
+                    task.id && handleViewDetails(task.id);
                   }}
                 >
                   <VisibilityIcon fontSize="small" />
@@ -113,7 +130,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                   color="error" 
                   onClick={(e) => {
                     e.stopPropagation();
-                    onDelete(task.id);
+                    task.id && onDelete(task.id);
                   }}
                 >
                   <DeleteIcon fontSize="small" />
