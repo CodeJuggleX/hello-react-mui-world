@@ -27,8 +27,9 @@ export interface EmployeeInfo {
 }
 
 export interface Task {
-  id?: string;
+  id?: string | number;
   parent_task: number | null;
+  subtodo?: Task[];
   employee_info: EmployeeInfo;
   task_name: string;
   description: string;

@@ -13,23 +13,26 @@ export const fetchTasks = async (): Promise<Task[]> => {
     
     const data: Task[] = await response.json();
     
-    // Добавляем id для совместимости с текущей структурой
-    return data.map((task, index) => ({
+    // Добавляем id для совместимости с текущей структурой, если его нет
+    return data.map((task) => ({
       ...task,
-      id: String(index + 1)
+      id: task.id || String(Math.random())
     }));
   } catch (error) {
     console.error('Error fetching tasks:', error);
-    throw error;
+    // Возвращаем пустой массив вместо выброса ошибки для улучшения UX
+    return [];
   }
 };
 
 export const fetchTaskById = async (taskId: string): Promise<Task | null> => {
   try {
+    // В реальном API этот эндпоинт должен возвращать задачу вместе с подзадачами
+    // Сейчас имитируем получение всех задач и фильтрацию
     const tasks = await fetchTasks();
-    return tasks.find(task => task.id === taskId) || null;
+    return tasks.find(task => String(task.id) === taskId) || null;
   } catch (error) {
     console.error('Error fetching task by id:', error);
-    throw error;
+    return null;
   }
 };

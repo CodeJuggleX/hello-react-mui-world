@@ -8,7 +8,6 @@ import {
   Paper, 
   Grid,
   Button,
-  Chip,
   Divider,
   Alert,
   IconButton,
@@ -19,6 +18,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TaskStatusChip from '../components/TaskStatusChip';
+import SubtaskList from '../components/SubtaskList';
 import { fetchTaskById } from '../services/apiService';
 import { Task } from '../types/types';
 
@@ -266,6 +266,24 @@ const TaskDetail: React.FC = () => {
               </Paper>
             </Grid>
           )}
+
+          <Grid item xs={12}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              Подзадачи
+            </Typography>
+            {task.subtodo && task.subtodo.length > 0 ? (
+              <SubtaskList subtasks={task.subtodo} />
+            ) : (
+              <Paper 
+                variant="outlined" 
+                sx={{ p: 3, backgroundColor: '#fafafa', textAlign: 'center' }}
+              >
+                <Typography color="text.secondary">
+                  Подзадачи отсутствуют
+                </Typography>
+              </Paper>
+            )}
+          </Grid>
         </Grid>
       </Paper>
 
