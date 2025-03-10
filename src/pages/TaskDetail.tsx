@@ -13,6 +13,7 @@ import {
   IconButton,
   Avatar,
   CircularProgress,
+  Chip
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
@@ -46,6 +47,7 @@ const TaskDetail: React.FC = () => {
         }
       } catch (err) {
         setError('Ошибка при загрузке задачи');
+        console.error('Error loading task:', err);
       } finally {
         setLoading(false);
       }
@@ -92,8 +94,9 @@ const TaskDetail: React.FC = () => {
         <Box mt={2}>
           <Button 
             variant="outlined" 
-            startIcon={<ArrowBackIcon />}
+            color="primary" 
             onClick={handleBack}
+            startIcon={<ArrowBackIcon />}
           >
             Вернуться к списку
           </Button>
