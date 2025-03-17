@@ -7,7 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import TaskManager from "./pages/TaskManager";
 import TaskDetail from "./pages/TaskDetail";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -46,8 +48,17 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<TaskManager />} />
-            <Route path="/task/:taskId" element={<TaskDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={
+              <ProtectedRoute>
+                <TaskManager />
+              </ProtectedRoute>
+            } />
+            <Route path="/task/:taskId" element={
+              <ProtectedRoute>
+                <TaskDetail />
+              </ProtectedRoute>
+            } />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

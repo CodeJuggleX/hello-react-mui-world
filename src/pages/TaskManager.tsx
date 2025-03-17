@@ -12,8 +12,10 @@ import {
 import SearchBar from '../components/SearchBar';
 import TaskFilters from '../components/TaskFilters';
 import TaskTable from '../components/TaskTable';
+import Header from '../components/Header';
 import { fetchTasks } from '../services/apiService';
 import { Task, StatusFilter, SortOption } from '../types/types';
+import { useToast } from '@/hooks/use-toast';
 
 const TaskManager: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -120,59 +122,62 @@ const TaskManager: React.FC = () => {
   }, [tasks, searchQuery, statusFilter, sortOption]);
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" fontWeight="500" sx={{ mb: 3 }}>
-        Управление задачами
-      </Typography>
-      
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} md={6}>
-          <SearchBar 
-            searchQuery={searchQuery} 
-            onSearchChange={handleSearchChange} 
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Box display="flex" justifyContent="flex-end">
-            <TaskFilters 
-              statusFilter={statusFilter}
-              sortOption={sortOption}
-              onStatusFilterChange={handleStatusFilterChange}
-              onSortOptionChange={handleSortOptionChange}
+    <>
+      <Header />
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Typography variant="h4" component="h1" fontWeight="500" sx={{ mb: 3 }}>
+          Управление задачами
+        </Typography>
+        
+        <Grid container spacing={2} sx={{ mb: 3 }}>
+          <Grid item xs={12} md={6}>
+            <SearchBar 
+              searchQuery={searchQuery} 
+              onSearchChange={handleSearchChange} 
             />
-          </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box display="flex" justifyContent="flex-end">
+              <TaskFilters 
+                statusFilter={statusFilter}
+                sortOption={sortOption}
+                onStatusFilterChange={handleStatusFilterChange}
+                onSortOptionChange={handleSortOptionChange}
+              />
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-      
-      {loading ? (
-        <Box display="flex" justifyContent="center" py={5}>
-          <CircularProgress />
-        </Box>
-      ) : error ? (
-        <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>
-      ) : (
-        <TaskTable 
-          tasks={filteredTasks} 
-          onEdit={handleEditTask} 
-          onDelete={handleDeleteTask} 
-        />
-      )}
-      
-      <Snackbar 
-        open={snackbar.open} 
-        autoHideDuration={6000} 
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity={snackbar.severity} 
-          sx={{ width: '100%' }}
+        
+        {loading ? (
+          <Box display="flex" justifyContent="center" py={5}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>
+        ) : (
+          <TaskTable 
+            tasks={filteredTasks} 
+            onEdit={handleEditTask} 
+            onDelete={handleDeleteTask} 
+          />
+        )}
+        
+        <Snackbar 
+          open={snackbar.open} 
+          autoHideDuration={6000} 
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Container>
+          <Alert 
+            onClose={handleCloseSnackbar} 
+            severity={snackbar.severity} 
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </Container>
+    </>
   );
 };
 
