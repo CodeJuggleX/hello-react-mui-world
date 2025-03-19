@@ -4,12 +4,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { ThemeProvider as MuiThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import TaskManager from "./pages/TaskManager";
 import TaskDetail from "./pages/TaskDetail";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
 
@@ -63,28 +64,30 @@ const theme = createTheme({
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={
-              <ProtectedRoute>
-                <TaskManager />
-              </ProtectedRoute>
-            } />
-            <Route path="/task/:taskId" element={
-              <ProtectedRoute>
-                <TaskDetail />
-              </ProtectedRoute>
-            } />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+    <ThemeProvider>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <TaskManager />
+                </ProtectedRoute>
+              } />
+              <Route path="/task/:taskId" element={
+                <ProtectedRoute>
+                  <TaskDetail />
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </MuiThemeProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

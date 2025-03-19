@@ -40,17 +40,20 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
   };
 
   return (
-    <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
+    <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid rgba(255, 255, 255, 0.1)', backgroundColor: 'transparent' }}>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
-          <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-            <TableCell>Название</TableCell>
-            <TableCell>Описание</TableCell>
-            <TableCell>Статус</TableCell>
-            <TableCell>Приоритет</TableCell>
-            <TableCell>Исполнитель</TableCell>
-            <TableCell>Срок</TableCell>
-            <TableCell align="center">Действия</TableCell>
+          <TableRow sx={{ 
+            backgroundColor: 'rgba(30, 30, 35, 0.7)', 
+            '&:hover': { backgroundColor: 'rgba(30, 30, 35, 0.7)' } // Force the same bg on hover
+          }}>
+            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>Название</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>Описание</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>Статус</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>Приоритет</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>Исполнитель</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>Срок</TableCell>
+            <TableCell align="center" sx={{ fontWeight: 'bold', fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>Действия</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -59,8 +62,9 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
               key={task.id}
               sx={{ 
                 '&:last-child td, &:last-child th': { border: 0 },
-                '&:hover': { backgroundColor: '#f9f9f9' },
-                cursor: 'pointer'
+                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.05)' },
+                cursor: 'pointer',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
               }}
               onClick={() => handleViewDetails(task.id)}
             >
@@ -77,7 +81,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                     overflow: 'hidden', 
                     textOverflow: 'ellipsis', 
                     whiteSpace: 'nowrap',
-                    color: '#666'
+                    color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
                   {task.description}
