@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   AppBar, 
@@ -14,12 +13,10 @@ import { useNavigate } from 'react-router-dom';
 import { logout, getCurrentUser } from '../services/authService';
 import { useToast } from '@/hooks/use-toast';
 import DarkModeToggle from './DarkModeToggle';
-import { useTheme } from '@/contexts/ThemeContext';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { isDarkMode, toggleDarkMode } = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const user = getCurrentUser();
 
@@ -68,7 +65,7 @@ const Header: React.FC = () => {
         </Typography>
         
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <DarkModeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+          <DarkModeToggle />
           
           {user && (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
