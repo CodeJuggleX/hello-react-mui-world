@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -8,6 +8,67 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #f5f5f5;
+  font-family: 'Inter', sans-serif;
+  background-color: hsl(240 10% 3.9%);
+  color: hsl(0 0% 98%);
+}
+
+.dark-glass {
+  background: rgba(30, 30, 35, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.MuiPaper-root {
+  background-color: hsl(240 10% 7%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+.MuiInputBase-root {
+  background-color: hsl(240 10% 10%) !important;
+  color: hsl(0 0% 90%) !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: hsl(240 5% 26%) !important;
+}
+
+.MuiInputLabel-root {
+  color: hsl(240 5% 65%) !important;
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: hsl(210 100% 70%) !important;
+}
+
+.MuiButton-contained {
+  background-color: hsl(210 100% 50%) !important;
+}
+
+.MuiButton-contained:hover {
+  background-color: hsl(210 100% 45%) !important;
+}
+
+.MuiTableHead-root {
+  background-color: hsl(240 10% 12%) !important;
+}
+
+.MuiTableRow-root:hover {
+  background-color: hsl(240 10% 12%) !important;
+}
+
+.MuiTableCell-root {
+  border-bottom-color: hsl(240 5% 15%) !important;
+  color: hsl(0 0% 90%) !important;
+}
+
+.MuiAlert-standardInfo {
+  background-color: hsl(210 50% 15%) !important;
+  color: hsl(210 100% 80%) !important;
+}
+
+.MuiAlert-standardError {
+  background-color: hsl(0 50% 15%) !important;
+  color: hsl(0 100% 80%) !important;
 }

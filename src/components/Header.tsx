@@ -40,24 +40,59 @@ const Header: React.FC = () => {
   };
 
   return (
-    <AppBar position="static" color="primary" elevation={1}>
+    <AppBar 
+      position="static" 
+      elevation={0} 
+      sx={{ 
+        background: 'rgba(30, 30, 35, 0.8)', 
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+      }}
+    >
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography 
+          variant="h6" 
+          component="div" 
+          sx={{ 
+            flexGrow: 1, 
+            fontWeight: 500,
+            background: 'linear-gradient(90deg, #4158D0 0%, #C850C0 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            letterSpacing: '0.02em'
+          }}
+        >
           Система управления задачами
         </Typography>
         
         {user && (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="body1" sx={{ mr: 2 }}>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                mr: 2, 
+                color: 'rgba(255, 255, 255, 0.8)',
+                fontWeight: 500
+              }}
+            >
               {user.username}
             </Typography>
             
             <IconButton
               onClick={handleMenuOpen}
               size="small"
-              color="inherit"
+              sx={{
+                border: '2px solid rgba(255, 255, 255, 0.2)',
+                padding: '4px'
+              }}
             >
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
+              <Avatar 
+                sx={{ 
+                  width: 32, 
+                  height: 32, 
+                  background: 'linear-gradient(135deg, #4158D0 0%, #C850C0 100%)'
+                }}
+              >
                 {user.username.charAt(0).toUpperCase()}
               </Avatar>
             </IconButton>
@@ -74,8 +109,27 @@ const Header: React.FC = () => {
                 vertical: 'top',
                 horizontal: 'right',
               }}
+              PaperProps={{
+                sx: {
+                  background: 'rgba(30, 30, 35, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  minWidth: '150px',
+                  marginTop: '8px'
+                }
+              }}
             >
-              <MenuItem onClick={handleLogout}>Выйти</MenuItem>
+              <MenuItem 
+                onClick={handleLogout}
+                sx={{
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }}
+              >
+                Выйти
+              </MenuItem>
             </Menu>
           </Box>
         )}

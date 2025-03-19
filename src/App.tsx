@@ -15,24 +15,46 @@ const queryClient = new QueryClient();
 
 const theme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
-      main: '#1976d2',
+      main: '#4158D0',
     },
     secondary: {
-      main: '#f50057',
+      main: '#C850C0',
     },
     background: {
-      default: '#fafafa',
+      default: '#121212',
+      paper: '#1e1e24',
+    },
+    text: {
+      primary: '#f5f5f5',
+      secondary: '#b0b0b0',
     },
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           textTransform: 'none',
+          borderRadius: '8px',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'rgba(30, 30, 35, 0.8)',
+          backdropFilter: 'blur(10px)',
         },
       },
     },
