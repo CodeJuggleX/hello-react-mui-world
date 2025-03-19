@@ -22,8 +22,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     // Apply the theme to the document
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     }
   }, [isDarkMode]);
 

@@ -9,8 +9,18 @@
 
 body {
   font-family: 'Inter', sans-serif;
+}
+
+/* Темный режим */
+.dark body {
   background-color: hsl(240 10% 3.9%);
   color: hsl(0 0% 98%);
+}
+
+/* Светлый режим */
+.light body {
+  background-color: hsl(0 0% 96%);
+  color: hsl(240 10% 3.9%);
 }
 
 .dark-glass {
@@ -20,55 +30,117 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.MuiPaper-root {
+.light-glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Темные стили для MUI */
+.dark .MuiPaper-root {
   background-color: hsl(240 10% 7%) !important;
   color: hsl(0 0% 98%) !important;
 }
 
-.MuiInputBase-root {
+.dark .MuiInputBase-root {
   background-color: hsl(240 10% 10%) !important;
   color: hsl(0 0% 90%) !important;
 }
 
-.MuiOutlinedInput-notchedOutline {
+.dark .MuiOutlinedInput-notchedOutline {
   border-color: hsl(240 5% 26%) !important;
 }
 
-.MuiInputLabel-root {
+.dark .MuiInputLabel-root {
   color: hsl(240 5% 65%) !important;
 }
 
-.MuiInputLabel-root.Mui-focused {
+.dark .MuiInputLabel-root.Mui-focused {
   color: hsl(210 100% 70%) !important;
 }
 
-.MuiButton-contained {
+.dark .MuiButton-contained {
   background-color: hsl(210 100% 50%) !important;
 }
 
-.MuiButton-contained:hover {
+.dark .MuiButton-contained:hover {
   background-color: hsl(210 100% 45%) !important;
 }
 
-.MuiTableHead-root {
+.dark .MuiTableHead-root {
   background-color: hsl(240 10% 12%) !important;
 }
 
-.MuiTableRow-root:hover {
+.dark .MuiTableRow-root:hover {
   background-color: hsl(240 10% 12%) !important;
 }
 
-.MuiTableCell-root {
+.dark .MuiTableCell-root {
   border-bottom-color: hsl(240 5% 15%) !important;
   color: hsl(0 0% 90%) !important;
 }
 
-.MuiAlert-standardInfo {
+.dark .MuiAlert-standardInfo {
   background-color: hsl(210 50% 15%) !important;
   color: hsl(210 100% 80%) !important;
 }
 
-.MuiAlert-standardError {
+.dark .MuiAlert-standardError {
   background-color: hsl(0 50% 15%) !important;
   color: hsl(0 100% 80%) !important;
+}
+
+/* Светлые стили для MUI */
+.light .MuiPaper-root {
+  background-color: hsl(0 0% 100%) !important;
+  color: hsl(240 10% 7%) !important;
+}
+
+.light .MuiInputBase-root {
+  background-color: hsl(0 0% 98%) !important;
+  color: hsl(240 10% 10%) !important;
+}
+
+.light .MuiOutlinedInput-notchedOutline {
+  border-color: hsl(240 5% 80%) !important;
+}
+
+.light .MuiInputLabel-root {
+  color: hsl(240 5% 40%) !important;
+}
+
+.light .MuiInputLabel-root.Mui-focused {
+  color: hsl(210 100% 50%) !important;
+}
+
+.light .MuiButton-contained {
+  background-color: hsl(210 100% 50%) !important;
+}
+
+.light .MuiButton-contained:hover {
+  background-color: hsl(210 100% 45%) !important;
+}
+
+.light .MuiTableHead-root {
+  background-color: hsl(240 10% 95%) !important;
+}
+
+.light .MuiTableRow-root:hover {
+  background-color: hsl(240 10% 95%) !important;
+}
+
+.light .MuiTableCell-root {
+  border-bottom-color: hsl(240 5% 85%) !important;
+  color: hsl(240 10% 20%) !important;
+}
+
+.light .MuiAlert-standardInfo {
+  background-color: hsl(210 50% 90%) !important;
+  color: hsl(210 100% 30%) !important;
+}
+
+.light .MuiAlert-standardError {
+  background-color: hsl(0 50% 90%) !important;
+  color: hsl(0 100% 30%) !important;
 }
