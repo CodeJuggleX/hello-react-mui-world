@@ -109,10 +109,8 @@ const TaskDetail: React.FC = () => {
           <Alert severity="error">{error}</Alert>
           <Box mt={2}>
             <Button 
-              variant="outlined" 
-              color="primary" 
+              variant="outline" 
               onClick={handleBack}
-              startIcon={<ArrowBackIcon />}
             >
               Вернуться к списку
             </Button>
