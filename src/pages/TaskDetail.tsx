@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -18,7 +17,7 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, ArrowLeft } from 'lucide-react';
 import TaskStatusChip from '../components/TaskStatusChip';
 import SubtaskList from '../components/SubtaskList';
 import Header from '../components/Header';
@@ -295,8 +294,8 @@ const TaskDetail: React.FC = () => {
                   <Button 
                     onClick={() => setIsCommentDialogOpen(true)} 
                     variant="outline"
-                    startIcon={<MessageSquare size={16} />}
                   >
+                    <MessageSquare size={16} className="mr-2" />
                     Добавить замечание
                   </Button>
                 </Box>
@@ -346,14 +345,13 @@ const TaskDetail: React.FC = () => {
         </Paper>
 
         <Box display="flex" justifyContent="flex-end">
-          <MuiButton 
-            variant="outlined" 
-            color="primary" 
+          <Button 
+            variant="outline" 
             onClick={handleBack}
-            startIcon={<ArrowBackIcon />}
           >
+            <ArrowLeft className="mr-2" />
             Вернуться к списку
-          </MuiButton>
+          </Button>
         </Box>
       </Container>
 
