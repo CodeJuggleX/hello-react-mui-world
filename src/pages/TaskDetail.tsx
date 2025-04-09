@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -17,7 +18,7 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MessageSquareIcon from '@mui/icons-material/Comment';
+import { MessageSquare } from 'lucide-react';
 import TaskStatusChip from '../components/TaskStatusChip';
 import SubtaskList from '../components/SubtaskList';
 import Header from '../components/Header';
@@ -160,7 +161,7 @@ const TaskDetail: React.FC = () => {
                 sx={{ mr: 1 }}
                 title="Добавить замечание"
               >
-                <MessageSquareIcon />
+                <MessageSquare size={24} />
               </IconButton>
               <IconButton 
                 color="primary" 
@@ -294,6 +295,7 @@ const TaskDetail: React.FC = () => {
                   <Button 
                     onClick={() => setIsCommentDialogOpen(true)} 
                     variant="outline"
+                    startIcon={<MessageSquare size={16} />}
                   >
                     Добавить замечание
                   </Button>

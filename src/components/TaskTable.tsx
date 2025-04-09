@@ -12,18 +12,21 @@ import {
   IconButton,
   Typography,
   Avatar,
-  Box
+  Box,
+  Tooltip
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import MessageSquareIcon from '@mui/icons-material/Comment';
+import { MessageSquare } from 'lucide-react';
 import TaskStatusChip from './TaskStatusChip';
 import { Task } from '../types/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from './ui/badge';
+import { Tooltip as ShadcnTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 interface TaskTableProps {
   tasks: Task[];
@@ -68,6 +71,15 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
       // В реальном приложении здесь был бы API-запрос для сохранения комментария
       console.log(`Сохранение комментария для задачи ${selectedTaskId}: ${commentText}`);
       
+      // Находим задачу и обновляем ее комментарий в нашем локальном состоянии
+      const taskIndex = tasks.findIndex(t => t.id === selectedTaskId);
+      if (taskIndex >= 0) {
+        tasks[taskIndex] = {
+          ...tasks[taskIndex],
+          comment: commentText
+        };
+      }
+      
       toast({
         title: "Замечание добавлено",
         description: "Замечание к задаче успешно сохранено",
@@ -89,6 +101,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
               <TableCell>Приоритет</TableCell>
               <TableCell>Исполнитель</TableCell>
               <TableCell>Срок</TableCell>
+              <TableCell>Замечания</TableCell>
               <TableCell align="center">Действия</TableCell>
             </TableRow>
           </TableHead>
@@ -143,6 +156,37 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                 <TableCell>
                   <Typography variant="body2">{formatDate(task.deadline)}</Typography>
                 </TableCell>
+                <TableCell>
+                  {task.comment ? (
+                    <TooltipProvider>
+                      <ShadcnTooltip>
+                        <TooltipTrigger asChild>
+                          <Box sx={{ cursor: 'pointer' }}>
+                            <Typography 
+                              variant="body2" 
+                              sx={{ 
+                                color: '#1976d2',
+                                maxWidth: 150,
+                                overflow: 'hidden', 
+                                textOverflow: 'ellipsis', 
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {task.comment}
+                            </Typography>
+                          </Box>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-md">
+                          <p>{task.comment}</p>
+                        </TooltipContent>
+                      </ShadcnTooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      —
+                    </Typography>
+                  )}
+                </TableCell>
                 <TableCell align="center">
                   <IconButton 
                     size="small" 
@@ -155,17 +199,28 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                   >
                     <VisibilityIcon fontSize="small" />
                   </IconButton>
-                  <IconButton 
-                    size="small" 
-                    color="primary" 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenCommentDialog(e, task.id);
-                    }}
-                    title="Добавить замечание"
-                  >
-                    <MessageSquareIcon fontSize="small" />
-                  </IconButton>
+                  <TooltipProvider>
+                    <ShadcnTooltip>
+                      <TooltipTrigger asChild>
+                        <IconButton 
+                          size="small" 
+                          color="primary" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenCommentDialog(e, task.id);
+                          }}
+                        >
+                          <MessageSquare size={18} />
+                          {task.comment && (
+                            <Badge className="absolute h-3 w-3 top-0 right-0 translate-x-1/3 -translate-y-1/3" variant="secondary" />
+                          )}
+                        </IconButton>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Добавить замечание</p>
+                      </TooltipContent>
+                    </ShadcnTooltip>
+                  </TooltipProvider>
                   <IconButton 
                     size="small" 
                     color="primary" 
