@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { 
   AppBar, 
   Toolbar, 
   Typography, 
+  Button, 
   Box,
   IconButton,
   Menu,
@@ -12,7 +14,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { logout, getCurrentUser } from '../services/authService';
 import { useToast } from '@/hooks/use-toast';
-import DarkModeToggle from './DarkModeToggle';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -39,103 +40,45 @@ const Header: React.FC = () => {
   };
 
   return (
-    <AppBar 
-      position="static" 
-      elevation={0} 
-      sx={{ 
-        background: 'rgba(30, 30, 35, 0.8)', 
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-      }}
-    >
+    <AppBar position="static" color="primary" elevation={1}>
       <Toolbar>
-        <Typography 
-          variant="h6" 
-          component="div" 
-          sx={{ 
-            flexGrow: 1, 
-            fontWeight: 500,
-            background: 'linear-gradient(90deg, #4158D0 0%, #C850C0 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            letterSpacing: '0.02em'
-          }}
-        >
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Система управления задачами
         </Typography>
         
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <DarkModeToggle />
-          
-          {user && (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  mr: 2, 
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontWeight: 500
-                }}
-              >
-                {user.username}
-              </Typography>
-              
-              <IconButton
-                onClick={handleMenuOpen}
-                size="small"
-                sx={{
-                  border: '2px solid rgba(255, 255, 255, 0.2)',
-                  padding: '4px'
-                }}
-              >
-                <Avatar 
-                  sx={{ 
-                    width: 32, 
-                    height: 32, 
-                    background: 'linear-gradient(135deg, #4158D0 0%, #C850C0 100%)'
-                  }}
-                >
-                  {user.username.charAt(0).toUpperCase()}
-                </Avatar>
-              </IconButton>
-              
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                PaperProps={{
-                  sx: {
-                    background: 'rgba(30, 30, 35, 0.9)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    minWidth: '150px',
-                    marginTop: '8px'
-                  }
-                }}
-              >
-                <MenuItem 
-                  onClick={handleLogout}
-                  sx={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    '&:hover': {
-                      background: 'rgba(255, 255, 255, 0.1)'
-                    }
-                  }}
-                >
-                  Выйти
-                </MenuItem>
-              </Menu>
-            </Box>
-          )}
-        </Box>
+        {user && (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography variant="body1" sx={{ mr: 2 }}>
+              {user.username}
+            </Typography>
+            
+            <IconButton
+              onClick={handleMenuOpen}
+              size="small"
+              color="inherit"
+            >
+              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
+                {user.username.charAt(0).toUpperCase()}
+              </Avatar>
+            </IconButton>
+            
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <MenuItem onClick={handleLogout}>Выйти</MenuItem>
+            </Menu>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );
