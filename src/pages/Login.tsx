@@ -62,15 +62,6 @@ const Login: React.FC = () => {
           <Typography variant="body1" color="text.secondary" mt={1}>
             Введите учетные данные для входа в систему
           </Typography>
-          {window.location.href.includes('lovableproject.com') && (
-            <Alert severity="info" sx={{ mt: 2, textAlign: 'left' }}>
-              В демо-режиме используйте:
-              <br />
-              Логин: <strong>dev</strong>
-              <br />
-              Пароль: <strong>dev</strong>
-            </Alert>
-          )}
         </Box>
 
         {error && (
