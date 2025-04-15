@@ -6,7 +6,7 @@ import {
   Typography, 
   Paper, 
   Grid,
-  Button as MuiButton,
+  Button,
   Divider,
   Alert,
   IconButton,
@@ -17,12 +17,9 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MessageSquareIcon from '@mui/icons-material/Comment';
 import TaskStatusChip from '../components/TaskStatusChip';
 import SubtaskList from '../components/SubtaskList';
 import Header from '../components/Header';
-import TaskCommentDialog from '../components/TaskCommentDialog';
-import { Button } from '../components/ui/button';
 import { fetchTaskById } from '../services/apiService';
 import { Task } from '../types/types';
 
@@ -32,7 +29,6 @@ const TaskDetail: React.FC = () => {
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
 
   useEffect(() => {
     const loadTask = async () => {
@@ -71,16 +67,6 @@ const TaskDetail: React.FC = () => {
 
   const handleEdit = () => {
     alert('Редактирование задачи: ' + task?.task_name);
-  };
-
-  const handleSaveComment = (comment: string) => {
-    if (task) {
-      console.log(`Сохранение комментария для задачи ${task.id}: ${comment}`);
-      setTask({
-        ...task,
-        comment: comment
-      });
-    }
   };
 
   const formatDate = (dateString: string): string => {
@@ -156,14 +142,6 @@ const TaskDetail: React.FC = () => {
               {task.task_name}
             </Typography>
             <Box>
-              <IconButton 
-                color="primary" 
-                onClick={() => setIsCommentDialogOpen(true)} 
-                sx={{ mr: 1 }}
-                title="Добавить замечание"
-              >
-                <MessageSquareIcon />
-              </IconButton>
               <IconButton 
                 color="primary" 
                 onClick={handleEdit}
@@ -259,18 +237,9 @@ const TaskDetail: React.FC = () => {
 
             {task.comment && (
               <Grid item xs={12}>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Typography variant="subtitle2" color="text.secondary">
-                    Замечание
-                  </Typography>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setIsCommentDialogOpen(true)}
-                  >
-                    Редактировать
-                  </Button>
-                </Box>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Комментарий
+                </Typography>
                 <Paper 
                   variant="outlined" 
                   sx={{ 
@@ -284,22 +253,6 @@ const TaskDetail: React.FC = () => {
                     {task.comment}
                   </Typography>
                 </Paper>
-              </Grid>
-            )}
-
-            {!task.comment && (
-              <Grid item xs={12}>
-                <Box textAlign="center" py={2}>
-                  <Typography variant="body2" color="text.secondary" mb={2}>
-                    Замечания к задаче отсутствуют
-                  </Typography>
-                  <Button 
-                    onClick={() => setIsCommentDialogOpen(true)} 
-                    variant="outline"
-                  >
-                    Добавить замечание
-                  </Button>
-                </Box>
               </Grid>
             )}
 
@@ -346,23 +299,16 @@ const TaskDetail: React.FC = () => {
         </Paper>
 
         <Box display="flex" justifyContent="flex-end">
-          <MuiButton 
+          <Button 
             variant="outlined" 
             color="primary" 
             onClick={handleBack}
             startIcon={<ArrowBackIcon />}
           >
             Вернуться к списку
-          </MuiButton>
+          </Button>
         </Box>
       </Container>
-
-      <TaskCommentDialog 
-        open={isCommentDialogOpen}
-        onOpenChange={setIsCommentDialogOpen}
-        initialComment={task?.comment || ''}
-        onSave={handleSaveComment}
-      />
     </>
   );
 };
