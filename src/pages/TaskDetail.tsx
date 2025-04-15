@@ -12,7 +12,8 @@ import {
   IconButton,
   Avatar,
   CircularProgress,
-  Chip
+  Chip,
+  TextField
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
@@ -160,7 +161,7 @@ const TaskDetail: React.FC = () => {
                 sx={{ mr: 1 }}
                 title="Добавить замечание"
               >
-                <MessageSquare size={24} />
+                <MessageSquare size={24} color="#ea384c" />
               </IconButton>
               <IconButton 
                 color="primary" 
@@ -255,52 +256,58 @@ const TaskDetail: React.FC = () => {
               </Paper>
             </Grid>
 
-            {task.comment && (
-              <Grid item xs={12}>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Typography variant="subtitle2" color="text.secondary">
-                    Замечание
-                  </Typography>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setIsCommentDialogOpen(true)}
-                  >
-                    Редактировать
-                  </Button>
-                </Box>
+            <Grid item xs={12}>
+              <Box mb={1} display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="subtitle2" color="text.secondary">
+                  Замечание
+                </Typography>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setIsCommentDialogOpen(true)}
+                >
+                  Редактировать
+                </Button>
+              </Box>
+              
+              {task.comment ? (
                 <Paper 
                   variant="outlined" 
                   sx={{ 
-                    mt: 1, 
                     p: 2,
-                    backgroundColor: '#f0f7ff',
-                    minHeight: 60
+                    backgroundColor: '#f8f9fa',
+                    borderRadius: '8px',
+                    borderColor: '#e0e0e0',
+                    borderLeftColor: '#ea384c',
+                    borderLeftWidth: '4px'
                   }}
                 >
-                  <Typography variant="body1">
-                    {task.comment}
-                  </Typography>
+                  <Box display="flex" alignItems="flex-start" gap={1}>
+                    <MessageSquare size={18} color="#ea384c" style={{ marginTop: '2px' }} />
+                    <Typography variant="body1" sx={{ color: '#333' }}>
+                      {task.comment}
+                    </Typography>
+                  </Box>
                 </Paper>
-              </Grid>
-            )}
-
-            {!task.comment && (
-              <Grid item xs={12}>
-                <Box textAlign="center" py={2}>
-                  <Typography variant="body2" color="text.secondary" mb={2}>
-                    Замечания к задаче отсутствуют
-                  </Typography>
-                  <Button 
-                    onClick={() => setIsCommentDialogOpen(true)} 
-                    variant="outline"
-                  >
-                    <MessageSquare size={16} className="mr-2" />
-                    Добавить замечание
-                  </Button>
-                </Box>
-              </Grid>
-            )}
+              ) : (
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Комментарий к задаче"
+                  disabled
+                  onClick={() => setIsCommentDialogOpen(true)}
+                  sx={{
+                    backgroundColor: '#f8f9fa',
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        borderColor: '#e0e0e0',
+                      },
+                    },
+                    cursor: 'pointer'
+                  }}
+                />
+              )}
+            </Grid>
 
             {task.parent_task && (
               <Grid item xs={12}>
@@ -326,7 +333,7 @@ const TaskDetail: React.FC = () => {
 
             <Grid item xs={12}>
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                Подзадачи
+                Подз��дачи
               </Typography>
               {task.subtodo && task.subtodo.length > 0 ? (
                 <SubtaskList subtasks={task.subtodo} />
@@ -360,6 +367,7 @@ const TaskDetail: React.FC = () => {
         onOpenChange={setIsCommentDialogOpen}
         initialComment={task?.comment || ''}
         onSave={handleSaveComment}
+        taskId={taskId}
       />
     </>
   );

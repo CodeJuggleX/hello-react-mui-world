@@ -12,7 +12,7 @@ interface TaskCommentDialogProps {
   onOpenChange: (open: boolean) => void;
   initialComment?: string;
   onSave: (comment: string) => void;
-  taskId?: string; // Added taskId prop
+  taskId?: string;
 }
 
 const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
