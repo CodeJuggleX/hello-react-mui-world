@@ -165,7 +165,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                             <Typography 
                               variant="body2" 
                               sx={{ 
-                                color: '#1976d2',
+                                color: '#ea384c',
                                 maxWidth: 150,
                                 overflow: 'hidden', 
                                 textOverflow: 'ellipsis', 
@@ -203,16 +203,16 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                     <ShadcnTooltip>
                       <TooltipTrigger asChild>
                         <IconButton 
-                          size="small" 
-                          color="primary" 
+                          size="small"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleOpenCommentDialog(e, task.id);
                           }}
+                          sx={{ color: '#ea384c' }}
                         >
                           <MessageSquare size={18} />
                           {task.comment && (
-                            <Badge className="absolute h-3 w-3 top-0 right-0 translate-x-1/3 -translate-y-1/3" variant="secondary" />
+                            <Badge className="absolute h-3 w-3 top-0 right-0 translate-x-1/3 -translate-y-1/3" variant="destructive" />
                           )}
                         </IconButton>
                       </TooltipTrigger>
@@ -254,7 +254,12 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
       <Dialog open={isCommentDialogOpen} onOpenChange={setIsCommentDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Добавить замечание к задаче</DialogTitle>
+            <DialogTitle>
+              <Box display="flex" alignItems="center">
+                <MessageSquare size={20} color="#ea384c" className="mr-2" />
+                Добавить замечание к задаче
+              </Box>
+            </DialogTitle>
           </DialogHeader>
           <div className="py-4">
             <Textarea
@@ -262,6 +267,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Введите текст замечания..."
               className="min-h-[100px]"
+              style={{ borderColor: "#eaeaea", padding: "12px" }}
             />
           </div>
           <DialogFooter className="sm:justify-between">
