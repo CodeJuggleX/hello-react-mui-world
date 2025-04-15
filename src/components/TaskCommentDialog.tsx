@@ -26,12 +26,14 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
   const [commentText, setCommentText] = useState(initialComment);
 
   const handleSave = () => {
-    onSave(commentText);
-    toast({
-      title: "Замечание сохранено",
-      description: "Замечание к задаче успешно сохранено",
-    });
-    onOpenChange(false);
+    if (commentText.trim()) {
+      onSave(commentText);
+      toast({
+        title: "Замечание сохранено",
+        description: "Замечание к задаче успешно сохранено",
+      });
+      onOpenChange(false);
+    }
   };
 
   const handleCancel = () => {
@@ -39,7 +41,7 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
     onOpenChange(false);
   };
 
-  // Сбрасываем текст при открытии диалога
+  // Reset text when dialog opens
   React.useEffect(() => {
     if (open) {
       setCommentText(initialComment);
@@ -64,6 +66,7 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
             placeholder="Введите текст замечания..."
             className="min-h-[100px]"
             style={{ borderColor: "#eaeaea", padding: "12px" }}
+            autoFocus
           />
         </div>
         <DialogFooter className="sm:justify-between">

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -77,10 +78,17 @@ const TaskDetail: React.FC = () => {
   const handleSaveComment = (comment: string) => {
     if (task) {
       console.log(`Сохранение комментария для задачи ${task.id}: ${comment}`);
-      setTask({
+      
+      // Update the task with the new comment in state
+      const updatedTask = {
         ...task,
         comment: comment
-      });
+      };
+      
+      setTask(updatedTask);
+      
+      // In a real application, you would also send a request to update the comment on the server
+      // For example: updateTaskComment(task.id, comment);
     }
   };
 
