@@ -12,6 +12,7 @@ interface TaskCommentDialogProps {
   onOpenChange: (open: boolean) => void;
   initialComment?: string;
   onSave: (comment: string) => void;
+  taskId?: string; // Added taskId prop
 }
 
 const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
@@ -19,6 +20,7 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
   onOpenChange,
   initialComment = '',
   onSave,
+  taskId,
 }) => {
   const { toast } = useToast();
   const [commentText, setCommentText] = useState(initialComment);
@@ -51,7 +53,7 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
           <DialogTitle>
             <Box display="flex" alignItems="center">
               <MessageSquare size={20} color="#ea384c" className="mr-2" />
-              Замечание к задаче
+              Замечание к задаче {taskId ? `#${taskId}` : ''}
             </Box>
           </DialogTitle>
         </DialogHeader>

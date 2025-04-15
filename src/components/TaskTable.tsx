@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -13,10 +12,7 @@ import {
   Typography,
   Avatar,
   Box,
-  Tooltip
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { MessageSquare } from 'lucide-react';
 import TaskStatusChip from './TaskStatusChip';
@@ -24,6 +20,10 @@ import { Task } from '../types/types';
 import TaskCommentDialog from './TaskCommentDialog';
 import { Badge } from './ui/badge';
 import { Tooltip as ShadcnTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { toast } from '@/hooks/use-toast';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Tooltip } from '@mui/material';
 
 interface TaskTableProps {
   tasks: Task[];
@@ -62,24 +62,28 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
     setCommentText('');
   };
 
-  const handleSaveComment = () => {
+  const handleSaveComment = (comment: string) => {
     if (selectedTaskId) {
       // В реальном приложении здесь был бы API-запрос для сохранения комментария
-      console.log(`Сохранение комментария для задачи ${selectedTaskId}: ${commentText}`);
+      console.log(`Сохранение комментария для задачи ${selectedTaskId}: ${comment}`);
       
       // Находим задачу и обновляем ее комментарий в нашем локальном состоянии
       const taskIndex = tasks.findIndex(t => t.id === selectedTaskId);
       if (taskIndex >= 0) {
         tasks[taskIndex] = {
           ...tasks[taskIndex],
-          comment: commentText
+          comment: comment
         };
-      }
-      
-      // Уведомляем пользователя об успешном сохранении
-      const toast = document.querySelector('[role="status"]');
-      if (!toast) {
-        console.log('Замечание к задаче успешно добавлено');
+        
+        // После сохранения комментария перенаправляем на детальную страницу задачи
+        toast({
+          title: "Замечание сохранено",
+          description: "Замечание к задаче успешно сохранено",
+        });
+        
+        setTimeout(() => {
+          navigate(`/task/${selectedTaskId}`);
+        }, 500); // Небольшая задержка, чтобы пользователь увидел уведомление
       }
       
       handleCloseCommentDialog();
@@ -150,6 +154,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                     </Typography>
                   </Box>
                 </TableCell>
+                
                 <TableCell>
                   <Typography variant="body2">{formatDate(task.deadline)}</Typography>
                 </TableCell>
@@ -253,20 +258,8 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
         open={isCommentDialogOpen}
         onOpenChange={setIsCommentDialogOpen}
         initialComment={commentText}
-        onSave={(comment) => {
-          if (selectedTaskId) {
-            // Обновляем локальное состояние
-            const taskIndex = tasks.findIndex(t => t.id === selectedTaskId);
-            if (taskIndex >= 0) {
-              tasks[taskIndex] = {
-                ...tasks[taskIndex],
-                comment: comment
-              };
-            }
-            console.log(`Замечание сохранено для задачи ${selectedTaskId}: ${comment}`);
-          }
-          handleCloseCommentDialog();
-        }}
+        taskId={selectedTaskId || undefined}
+        onSave={handleSaveComment}
       />
     </>
   );
