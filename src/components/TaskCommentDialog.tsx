@@ -4,15 +4,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { MessageSquare } from 'lucide-react';
-import { Box } from '@mui/material';
 
 interface TaskCommentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialComment?: string;
   onSave: (comment: string) => void;
-  taskId?: string;
 }
 
 const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
@@ -20,20 +17,17 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
   onOpenChange,
   initialComment = '',
   onSave,
-  taskId,
 }) => {
   const { toast } = useToast();
   const [commentText, setCommentText] = useState(initialComment);
 
   const handleSave = () => {
-    if (commentText.trim()) {
-      onSave(commentText);
-      toast({
-        title: "Замечание сохранено",
-        description: "Замечание к задаче успешно сохранено",
-      });
-      onOpenChange(false);
-    }
+    onSave(commentText);
+    toast({
+      title: "Замечание сохранено",
+      description: "Замечание к задаче успешно сохранено",
+    });
+    onOpenChange(false);
   };
 
   const handleCancel = () => {
@@ -41,7 +35,7 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
     onOpenChange(false);
   };
 
-  // Reset text when dialog opens
+  // Сбрасываем текст при открытии диалога
   React.useEffect(() => {
     if (open) {
       setCommentText(initialComment);
@@ -52,12 +46,7 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
-            <Box display="flex" alignItems="center">
-              <MessageSquare size={20} color="#ea384c" className="mr-2" />
-              Замечание к задаче {taskId ? `#${taskId}` : ''}
-            </Box>
-          </DialogTitle>
+          <DialogTitle>Замечание к задаче</DialogTitle>
         </DialogHeader>
         <div className="py-4">
           <Textarea
@@ -65,8 +54,6 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Введите текст замечания..."
             className="min-h-[100px]"
-            style={{ borderColor: "#eaeaea", padding: "12px" }}
-            autoFocus
           />
         </div>
         <DialogFooter className="sm:justify-between">
