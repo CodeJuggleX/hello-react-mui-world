@@ -21,10 +21,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { MessageSquare } from 'lucide-react';
 import TaskStatusChip from './TaskStatusChip';
 import { Task } from '../types/types';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
-import { Button } from './ui/button';
-import { Textarea } from './ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import TaskCommentDialog from './TaskCommentDialog';
 import { Badge } from './ui/badge';
 import { Tooltip as ShadcnTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
@@ -36,7 +33,6 @@ interface TaskTableProps {
 
 const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [commentText, setCommentText] = useState('');
@@ -80,10 +76,11 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
         };
       }
       
-      toast({
-        title: "Замечание добавлено",
-        description: "Замечание к задаче успешно сохранено",
-      });
+      // Уведомляем пользователя об успешном сохранении
+      const toast = document.querySelector('[role="status"]');
+      if (!toast) {
+        console.log('Замечание к задаче успешно добавлено');
+      }
       
       handleCloseCommentDialog();
     }
@@ -161,7 +158,8 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                     <TooltipProvider>
                       <ShadcnTooltip>
                         <TooltipTrigger asChild>
-                          <Box sx={{ cursor: 'pointer' }}>
+                          <Box display="flex" alignItems="center" sx={{ cursor: 'pointer' }}>
+                            <MessageSquare size={16} color="#ea384c" className="mr-1" />
                             <Typography 
                               variant="body2" 
                               sx={{ 
@@ -251,41 +249,25 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
       </TableContainer>
 
       {/* Диалог для добавления замечания */}
-      <Dialog open={isCommentDialogOpen} onOpenChange={setIsCommentDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>
-              <Box display="flex" alignItems="center">
-                <MessageSquare size={20} color="#ea384c" className="mr-2" />
-                Добавить замечание к задаче
-              </Box>
-            </DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <Textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Введите текст замечания..."
-              className="min-h-[100px]"
-              style={{ borderColor: "#eaeaea", padding: "12px" }}
-            />
-          </div>
-          <DialogFooter className="sm:justify-between">
-            <Button 
-              variant="outline" 
-              onClick={handleCloseCommentDialog}
-            >
-              Отмена
-            </Button>
-            <Button 
-              onClick={handleSaveComment}
-              disabled={!commentText.trim()}
-            >
-              Сохранить замечание
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <TaskCommentDialog 
+        open={isCommentDialogOpen}
+        onOpenChange={setIsCommentDialogOpen}
+        initialComment={commentText}
+        onSave={(comment) => {
+          if (selectedTaskId) {
+            // Обновляем локальное состояние
+            const taskIndex = tasks.findIndex(t => t.id === selectedTaskId);
+            if (taskIndex >= 0) {
+              tasks[taskIndex] = {
+                ...tasks[taskIndex],
+                comment: comment
+              };
+            }
+            console.log(`Замечание сохранено для задачи ${selectedTaskId}: ${comment}`);
+          }
+          handleCloseCommentDialog();
+        }}
+      />
     </>
   );
 };

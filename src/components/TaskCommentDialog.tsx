@@ -4,6 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { MessageSquare } from 'lucide-react';
+import { Box } from '@mui/material';
 
 interface TaskCommentDialogProps {
   open: boolean;
@@ -46,7 +48,12 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Замечание к задаче</DialogTitle>
+          <DialogTitle>
+            <Box display="flex" alignItems="center">
+              <MessageSquare size={20} color="#ea384c" className="mr-2" />
+              Замечание к задаче
+            </Box>
+          </DialogTitle>
         </DialogHeader>
         <div className="py-4">
           <Textarea
@@ -54,6 +61,7 @@ const TaskCommentDialog: React.FC<TaskCommentDialogProps> = ({
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Введите текст замечания..."
             className="min-h-[100px]"
+            style={{ borderColor: "#eaeaea", padding: "12px" }}
           />
         </div>
         <DialogFooter className="sm:justify-between">
