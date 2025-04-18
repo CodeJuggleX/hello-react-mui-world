@@ -1,91 +1,78 @@
 
 import { Task } from '../types/types';
-import { getAccessToken, refreshToken } from './authService';
+import { tasks as mockTasks } from '../data/mockTasks';
 
 const API_BASE_URL = 'http://192.168.38.236:8000/api/v1';
 
-// Helper function to get authorized headers
-const getAuthHeaders = () => {
-  const token = getAccessToken();
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
-
-// Handle API response with token refresh logic
-const handleApiResponse = async (response: Response) => {
-  if (response.ok) {
-    return response;
-  }
-  
-  // If unauthorized error, try to refresh token and retry once
-  if (response.status === 401) {
-    const newToken = await refreshToken();
-    
-    if (newToken) {
-      // Retry with new token
-      const originalRequest = response.url;
-      const method = response.type;
-      
-      return fetch(originalRequest, {
-        method,
-        headers: getAuthHeaders()
-      });
+// Функция для адаптации моковых данных к новому формату API
+const adaptMockDataToApiFormat = (): Task[] => {
+  return mockTasks.map((task, index) => ({
+    id: task.id,
+    parent_task: null,
+    task_name: task.title,
+    description: task.description,
+    task_status: task.status as 'Завершена' | 'В процессе' | 'Ожидает',
+    task_priority: task.priority as 'Высокий' | 'Средний' | 'Низкий',
+    deadline: task.dueDate,
+    comment: '',
+    employee_info: {
+      id: index + 1,
+      surname: task.assignee.split(' ')[0] || '',
+      name: task.assignee.split(' ')[1] || '',
+      last_name: '',
+      image: '',
+      full_path_image: '',
+      work_phone_num: '',
+      personal_phone_num: null,
+      email: null,
+      position: {
+        id: index + 1,
+        title: 'Разработчик'
+      },
+      department: {
+        id: index + 1,
+        title: 'IT отдел'
+      },
+      room_number: '101',
+      full_name: task.assignee,
+      order: index + 1
     }
-  }
-  
-  throw new Error(`API error: ${response.status}`);
+  }));
 };
 
 export const fetchTasks = async (): Promise<Task[]> => {
   try {
     const response = await fetch(`${API_BASE_URL}/todo/todos/`, {
-      headers: getAuthHeaders()
+      // Добавляем таймаут, чтобы не ждать долго при недоступности API
+      signal: AbortSignal.timeout(3000)
     });
     
-    const validResponse = await handleApiResponse(response);
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
     
-    const data: Task[] = await validResponse.json();
+    const data: Task[] = await response.json();
     
-    // Ensure all tasks have an id as string
-    return data.map((task) => ({
+    // Добавляем id для совместимости с текущей структурой
+    return data.map((task, index) => ({
       ...task,
-      id: task.id ? String(task.id) : String(Math.random())
+      id: task.id || String(index + 1)
     }));
   } catch (error) {
     console.error('Error fetching tasks:', error);
-    // Return empty array instead of throwing an error for better UX
-    return [];
+    console.log('Falling back to mock data...');
+    
+    // Возвращаем моковые данные при ошибке API
+    return adaptMockDataToApiFormat();
   }
 };
 
 export const fetchTaskById = async (taskId: string): Promise<Task | null> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/todo/todos/${taskId}/`, {
-      headers: getAuthHeaders()
-    });
-    
-    const validResponse = await handleApiResponse(response);
-    
-    const task: Task = await validResponse.json();
-    
-    // Ensure the task and all subtasks have string ids
-    const processedTask = {
-      ...task,
-      id: String(task.id)
-    };
-    
-    if (processedTask.subtodo && processedTask.subtodo.length > 0) {
-      processedTask.subtodo = processedTask.subtodo.map(subtask => ({
-        ...subtask,
-        id: String(subtask.id)
-      }));
-    }
-    
-    return processedTask;
+    const tasks = await fetchTasks();
+    return tasks.find(task => task.id === taskId) || null;
   } catch (error) {
     console.error('Error fetching task by id:', error);
-    return null;
+    throw error;
   }
 };
