@@ -41,10 +41,15 @@ const adaptMockDataToApiFormat = (): Task[] => {
 };
 
 export const fetchTasks = async (): Promise<Task[]> => {
+  console.log('Fetching tasks from API...');
   try {
     const response = await fetch(`${API_BASE_URL}/todo/todos/`, {
       // Добавляем таймаут, чтобы не ждать долго при недоступности API
-      signal: AbortSignal.timeout(3000)
+      signal: AbortSignal.timeout(5000),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
     
     if (!response.ok) {
@@ -52,6 +57,7 @@ export const fetchTasks = async (): Promise<Task[]> => {
     }
     
     const data: Task[] = await response.json();
+    console.log('API data received:', data);
     
     // Добавляем id для совместимости с текущей структурой
     return data.map((task, index) => ({
@@ -69,10 +75,36 @@ export const fetchTasks = async (): Promise<Task[]> => {
 
 export const fetchTaskById = async (taskId: string): Promise<Task | null> => {
   try {
+    console.log(`Fetching task with ID: ${taskId}`);
+    // Пытаемся получить данные из API
+    try {
+      const response = await fetch(`${API_BASE_URL}/todo/todos/${taskId}/`, {
+        signal: AbortSignal.timeout(3000),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        const task = await response.json();
+        console.log('Task data from API:', task);
+        return {
+          ...task,
+          id: task.id || taskId
+        };
+      }
+    } catch (apiError) {
+      console.error('Error fetching task from API:', apiError);
+    }
+    
+    // Если API не вернул данные, пробуем получить из общего списка
     const tasks = await fetchTasks();
-    return tasks.find(task => task.id === taskId) || null;
+    const task = tasks.find(task => task.id === taskId);
+    console.log('Task found in list:', task);
+    return task || null;
   } catch (error) {
     console.error('Error fetching task by id:', error);
-    throw error;
+    return null;
   }
 };
