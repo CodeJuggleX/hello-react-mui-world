@@ -33,7 +33,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
     navigate(`/task/${taskId}`);
   };
 
-  // Функция для форматирования даты из ISO в дд.мм.гггг
+  // Format date from ISO to dd.mm.yyyy
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
@@ -62,7 +62,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                 '&:hover': { backgroundColor: '#f9f9f9' },
                 cursor: 'pointer'
               }}
-              onClick={() => task.id && handleViewDetails(task.id)}
+              onClick={() => handleViewDetails(task.id)}
             >
               <TableCell>
                 <Typography variant="body2" fontWeight={500}>
@@ -110,7 +110,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                   color="primary" 
                   onClick={(e) => {
                     e.stopPropagation();
-                    task.id && handleViewDetails(task.id);
+                    handleViewDetails(task.id);
                   }}
                 >
                   <VisibilityIcon fontSize="small" />
@@ -130,7 +130,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onEdit, onDelete }) => {
                   color="error" 
                   onClick={(e) => {
                     e.stopPropagation();
-                    task.id && onDelete(task.id);
+                    onDelete(task.id);
                   }}
                 >
                   <DeleteIcon fontSize="small" />
