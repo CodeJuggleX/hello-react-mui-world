@@ -1,8 +1,40 @@
 
 import { Task } from '../types/types';
 import { tasks as mockTasks } from '../data/mockTasks';
+import { getAccessToken, refreshToken } from './authService';
 
 const API_BASE_URL = 'http://192.168.38.236:8000/api/v1';
+
+const getAuthHeaders = () => {
+  const token = getAccessToken();
+  return {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+const handleApiResponse = async (response: Response) => {
+  if (response.ok) {
+    return response;
+  }
+  
+  if (response.status === 401) {
+    const newToken = await refreshToken();
+    
+    if (newToken) {
+      const originalRequest = response.url;
+      const method = response.type;
+      
+      return fetch(originalRequest, {
+        method,
+        headers: getAuthHeaders()
+      });
+    }
+  }
+  
+  throw new Error(`API error: ${response.status}`);
+};
 
 // Функция для адаптации моковых данных к новому формату API
 const adaptMockDataToApiFormat = (): Task[] => {
@@ -44,25 +76,18 @@ export const fetchTasks = async (): Promise<Task[]> => {
   console.log('Fetching tasks from API...');
   try {
     const response = await fetch(`${API_BASE_URL}/todo/todos/`, {
-      // Добавляем таймаут, чтобы не ждать долго при недоступности API
       signal: AbortSignal.timeout(5000),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
+      headers: getAuthHeaders()
     });
     
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
+    const validResponse = await handleApiResponse(response);
     
-    const data: Task[] = await response.json();
+    const data: Task[] = await validResponse.json();
     console.log('API data received:', data);
     
-    // Добавляем id для совместимости с текущей структурой
-    return data.map((task, index) => ({
+    return data.map((task) => ({
       ...task,
-      id: task.id || String(index + 1)
+      id: task.id ? String(task.id) : String(Math.random())
     }));
   } catch (error) {
     console.error('Error fetching tasks:', error);
@@ -80,20 +105,27 @@ export const fetchTaskById = async (taskId: string): Promise<Task | null> => {
     try {
       const response = await fetch(`${API_BASE_URL}/todo/todos/${taskId}/`, {
         signal: AbortSignal.timeout(3000),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
+        headers: getAuthHeaders()
       });
       
-      if (response.ok) {
-        const task = await response.json();
-        console.log('Task data from API:', task);
-        return {
-          ...task,
-          id: task.id || taskId
-        };
+      const validResponse = await handleApiResponse(response);
+      
+      const task: Task = await validResponse.json();
+      console.log('Task data from API:', task);
+      
+      const processedTask = {
+        ...task,
+        id: String(task.id)
+      };
+      
+      if (processedTask.subtodo && processedTask.subtodo.length > 0) {
+        processedTask.subtodo = processedTask.subtodo.map(subtask => ({
+          ...subtask,
+          id: String(subtask.id)
+        }));
       }
+      
+      return processedTask;
     } catch (apiError) {
       console.error('Error fetching task from API:', apiError);
     }
