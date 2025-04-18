@@ -36,34 +36,7 @@ export interface Task {
   task_priority: 'Высокий' | 'Средний' | 'Низкий';
   deadline: string;
   comment: string;
-  subtodo?: Task[];
 }
 
 export type SortOption = 'По сроку' | 'По приоритету' | 'По названию';
 export type StatusFilter = 'Все статусы' | 'Завершена' | 'В процессе' | 'Ожидает';
-
-// Аутентификация
-export interface LoginCredentials {
-  username: string;
-  password: string;
-}
-
-export interface RefreshTokenRequest {
-  refresh: string;
-}
-
-export interface AccountInfo {
-  id: number;
-  username: string;
-  email: string;
-  is_active: boolean;
-  is_staff: boolean;
-  full_name?: string;
-  position?: string;
-}
-
-export interface AuthResponse {
-  access: string;
-  refresh: string;
-  account: AccountInfo;
-}
