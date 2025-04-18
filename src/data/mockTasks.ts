@@ -1,32 +1,44 @@
 
 import { Task } from '../types/types';
 
-export const tasks: Task[] = [
+// Note: This interface doesn't match the actual Task interface
+// It's simplified for use with the mock data adapter in apiService.ts
+interface SimplifiedTask {
+  id: string;
+  title: string;
+  description: string;
+  status: 'Завершена' | 'В процессе' | 'Ожидает';
+  priority: 'Высокий' | 'Средний' | 'Низкий';
+  assignee: string;
+  dueDate: string;
+}
+
+export const tasks: SimplifiedTask[] = [
   {
     id: '1',
-    title: 'Update Documentation',
-    description: 'Update the API documentation with recent changes',
+    title: 'Обновление документации',
+    description: 'Обновить документацию API с учетом последних изменений',
     status: 'Завершена',
     priority: 'Низкий',
-    assignee: 'Bob Johnson',
-    dueDate: '06.03.2025',
+    assignee: 'Иванов Иван',
+    dueDate: '2025-03-06',
   },
   {
     id: '2',
-    title: 'Complete Project Proposal',
-    description: 'Draft and finalize the project proposal for client review',
+    title: 'Завершить проектное предложение',
+    description: 'Составить и утвердить проектное предложение для клиента',
     status: 'В процессе',
     priority: 'Высокий',
-    assignee: 'John Doe',
-    dueDate: '09.03.2025',
+    assignee: 'Петров Петр',
+    dueDate: '2025-03-09',
   },
   {
     id: '3',
-    title: 'Review Code Changes',
-    description: 'Review and approve pending pull requests',
+    title: 'Проверить изменения кода',
+    description: 'Проверить и одобрить ожидающие pull-запросы',
     status: 'Ожидает',
     priority: 'Средний',
-    assignee: 'Jane Smith',
-    dueDate: '12.03.2025',
+    assignee: 'Сидорова Анна',
+    dueDate: '2025-03-12',
   },
 ];
