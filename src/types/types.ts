@@ -27,8 +27,9 @@ export interface EmployeeInfo {
 }
 
 export interface Task {
-  id?: string;
+  id: string;
   parent_task: number | null;
+  subtodo?: Task[];
   employee_info: EmployeeInfo;
   task_name: string;
   description: string;
@@ -36,6 +37,44 @@ export interface Task {
   task_priority: 'Высокий' | 'Средний' | 'Низкий';
   deadline: string;
   comment: string;
+}
+
+export interface AuthResponse {
+  refresh: string;
+  access: string;
+  account: Account;
+  employee: EmployeeInfo | null;
+}
+
+export interface Account {
+  id: number;
+  username: string;
+  email: string;
+  ppp: any[];
+  permission: Permissions;
+  groups: any[];
+}
+
+export interface Permissions {
+  catalog: Permission;
+  techsupport: Permission;
+  hall_booking: Permission;
+}
+
+export interface Permission {
+  add: boolean;
+  view: boolean;
+  change: boolean;
+  delete: boolean;
+}
+
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+export interface RefreshTokenRequest {
+  refresh: string;
 }
 
 export type SortOption = 'По сроку' | 'По приоритету' | 'По названию';
