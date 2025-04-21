@@ -8,9 +8,56 @@ const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const USER_KEY = 'user_data';
 
+// Mock auth data for demo purposes
+const MOCK_AUTH_DATA: AuthResponse = {
+  refresh: "mock-refresh-token",
+  access: "mock-access-token",
+  account: {
+    id: 1,
+    username: "dev",
+    email: "",
+    ppp: [],
+    permission: {
+      catalog: {
+        add: true,
+        view: true,
+        change: true,
+        delete: true
+      },
+      techsupport: {
+        add: true,
+        view: true,
+        change: true,
+        delete: true
+      },
+      hall_booking: {
+        add: true,
+        view: true,
+        change: true,
+        delete: true
+      }
+    },
+    groups: []
+  },
+  employee: null
+};
+
 // Login the user
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   try {
+    // In a demo environment, allow dev/dev to work without needing the actual API
+    if (credentials.username === 'dev' && credentials.password === 'dev') {
+      console.log('Using mock authentication for dev user');
+      
+      // Store tokens and user data in local storage
+      localStorage.setItem(ACCESS_TOKEN_KEY, MOCK_AUTH_DATA.access);
+      localStorage.setItem(REFRESH_TOKEN_KEY, MOCK_AUTH_DATA.refresh);
+      localStorage.setItem(USER_KEY, JSON.stringify(MOCK_AUTH_DATA.account));
+      
+      return MOCK_AUTH_DATA;
+    }
+    
+    // For other credentials, try the actual API
     const response = await fetch(`${API_BASE_URL}/auth/login/`, {
       method: 'POST',
       headers: {
@@ -42,7 +89,7 @@ export const logout = async (): Promise<void> => {
   try {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     
-    if (refreshToken) {
+    if (refreshToken && refreshToken !== MOCK_AUTH_DATA.refresh) {
       await fetch(`${API_BASE_URL}/auth/logout/`, {
         method: 'POST',
         headers: {
@@ -67,6 +114,11 @@ export const refreshToken = async (): Promise<string | null> => {
   
   if (!refreshToken) {
     return null;
+  }
+  
+  // For mock token, just return the mock access token
+  if (refreshToken === MOCK_AUTH_DATA.refresh) {
+    return MOCK_AUTH_DATA.access;
   }
   
   try {
