@@ -28,15 +28,19 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
+      console.log('Попытка авторизации с логином:', username);
       await login({ username, password });
+      
       toast({
         title: "Успешная авторизация",
         description: "Вы успешно вошли в систему",
       });
+      
       navigate('/');
     } catch (err) {
-      console.error('Login error:', err);
+      console.error('Ошибка авторизации:', err);
       setError('Неверное имя пользователя или пароль');
+      
       toast({
         variant: "destructive",
         title: "Ошибка авторизации",
@@ -80,6 +84,9 @@ const Login: React.FC = () => {
             onChange={(e) => setUsername(e.target.value)}
             required
             autoFocus
+            inputProps={{ 
+              autoComplete: "username"
+            }}
           />
           
           <TextField
@@ -91,6 +98,9 @@ const Login: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            inputProps={{ 
+              autoComplete: "current-password"
+            }}
           />
           
           <Button
