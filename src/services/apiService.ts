@@ -74,6 +74,39 @@ const getMockTasks = (): Task[] => {
       deadline: "2025-05-01T00:00:00.000Z",
       comment: "Используйте React и TypeScript",
       subtodo: []
+    },
+    {
+      id: "2",
+      parent_task: null,
+      employee_info: {
+        id: 2,
+        surname: "Петров",
+        name: "Петр",
+        last_name: "Петрович",
+        image: "",
+        full_path_image: "",
+        work_phone_num: "789-012",
+        personal_phone_num: null,
+        email: "petrov@example.com",
+        position: {
+          id: 2,
+          title: "Менеджер"
+        },
+        department: {
+          id: 1,
+          title: "IT"
+        },
+        room_number: "202",
+        full_name: "Петров Петр Петрович",
+        order: 2
+      },
+      task_name: "Планирование спринта",
+      description: "Подготовить план работ на следующий спринт",
+      task_status: "Ожидает",
+      task_priority: "Средний",
+      deadline: "2025-04-25T00:00:00.000Z",
+      comment: "Обратите внимание на приоритеты задач",
+      subtodo: []
     }
   ];
 };

@@ -1,6 +1,6 @@
-
 import { AuthResponse, LoginCredentials, RefreshTokenRequest } from '../types/types';
 
+// API URL configuration
 const API_BASE_URL = 'http://192.168.38.236:8000/api/v1';
 
 // Local storage keys
@@ -8,16 +8,76 @@ const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const USER_KEY = 'user_data';
 
-// Вспомогательные функции для работы с localStorage
+// Helper functions for localStorage
 const getLocalStorage = (key: string) => localStorage.getItem(key);
 const setLocalStorage = (key: string, value: string) => localStorage.setItem(key, value);
 const removeLocalStorage = (key: string) => localStorage.removeItem(key);
+
+// Mock data for development fallback
+const MOCK_DEV_USER = {
+  username: 'dev',
+  password: 'dev',
+  access: 'mock-access-token',
+  refresh: 'mock-refresh-token',
+  account: {
+    id: 1,
+    username: 'dev',
+    email: 'dev@example.com',
+    ppp: [],
+    permission: {
+      catalog: { add: true, view: true, change: true, delete: true },
+      techsupport: { add: true, view: true, change: true, delete: true },
+      hall_booking: { add: true, view: true, change: true, delete: true }
+    },
+    groups: []
+  },
+  employee: {
+    id: 1,
+    surname: "Разработчик",
+    name: "Тестовый",
+    last_name: "Аккаунт",
+    image: "",
+    full_path_image: "",
+    work_phone_num: "123-456",
+    personal_phone_num: null,
+    email: "dev@example.com",
+    position: {
+      id: 1,
+      title: "Разработчик"
+    },
+    department: {
+      id: 1,
+      title: "IT"
+    },
+    room_number: "101",
+    full_name: "Разработчик Тестовый Аккаунт",
+    order: 1
+  }
+};
 
 // Login the user
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   try {
     console.log('Отправка запроса на авторизацию:', credentials.username);
     
+    // Dev mode fallback for the 'dev' user
+    if (credentials.username === 'dev' && credentials.password === 'dev') {
+      console.log('Используем тестовую авторизацию для разработчика');
+      
+      // Store mock tokens and user data
+      setLocalStorage(ACCESS_TOKEN_KEY, MOCK_DEV_USER.access);
+      setLocalStorage(REFRESH_TOKEN_KEY, MOCK_DEV_USER.refresh);
+      setLocalStorage(USER_KEY, JSON.stringify(MOCK_DEV_USER.account));
+      
+      return {
+        access: MOCK_DEV_USER.access,
+        refresh: MOCK_DEV_USER.refresh,
+        account: MOCK_DEV_USER.account,
+        employee: MOCK_DEV_USER.employee
+      };
+    }
+    
+    // Normal API authentication flow
     const response = await fetch(`${API_BASE_URL}/auth/login/`, {
       method: 'POST',
       headers: {
